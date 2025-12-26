@@ -1,0 +1,93 @@
+// Prisma Schema para CRM B2B FourSys MVP
+// Database: SQLite (Local Development)
+// Multi-tenancy: Shared Database, Shared Schema (Row-Level Security)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ============================================
+// TENANT MODEL
+// ============================================
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String   // Nome da empresa (ex: "FourSys Ltda")
+  slug      String   @unique // URL-friendly (ex: "foursys")
+  domain    String?  // Domínio customizado (opcional)
+  isActive  Boolean  @default(true) // Soft delete
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relações
+  leads     Lead[]
+  users     User[]
+  
+  // Índices para performance
+  @@index([slug])
+  @@index([isActive])
+}
+
+// ============================================
+// USER MODEL
+// ============================================
+
+model User {
+  id        String   @id @default(uuid())
+  tenantId  String   // Foreign Key para Tenant
+  email     String   @unique // Email único no sistema
+  name      String   // Nome completo do usuário
+  password  String   // Senha hasheada (bcrypt)
+  role      String   @default("user") // 'admin' | 'user' | 'viewer'
+  isActive  Boolean  @default(true) // Soft delete
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relação com Tenant
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  // Índices
+  @@index([tenantId])
+  @@index([email])
+  @@index([tenantId, role])
+}
+
+// ============================================
+// LEAD MODEL (ATUALIZADO COM MULTI-TENANCY)
+// ============================================
+
+model Lead {
+  id          String   @id @default(uuid())
+  tenantId    String   // ← NOVO: Foreign Key para Tenant
+  name        String   // Nome do Cliente
+  company     String   // Nome da Empresa
+  status      String   // 'prospect' | 'qualified' | 'proposal' | 'closed'
+  value       Float    // Valor Estimado em R$
+  aiScore     Int      // Score de IA (0-100)
+  email       String?  // Email (opcional)
+  phone       String?  // Telefone (opcional)
+  lastContact DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relação com Tenant
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  // Índices CRÍTICOS para performance e isolamento
+  @@index([status])
+  @@index([aiScore])
+  @@index([tenantId])            // ← NOVO: Query básica por tenant
+  @@index([tenantId, status])    // ← NOVO: Kanban board
+  @@index([tenantId, aiScore])   // ← NOVO: Ordenação por score
+  @@index([tenantId, createdAt]) // ← NOVO: Ordenação por data
+  
+  // Constraints de unicidade para prevenir duplicatas
+  @@unique([email, tenantId], name: "unique_email_per_tenant")
+  @@unique([phone, tenantId], name: "unique_phone_per_tenant")
+}
+

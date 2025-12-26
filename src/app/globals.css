@@ -1,0 +1,486 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ============================================ */
+/* ANIMAÇÕES E TRANSIÇÕES */
+/* ============================================ */
+
+/* Transições suaves globais */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Animação de fade-in para páginas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.page-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animação de slide-in para modais */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.2s ease-out;
+}
+
+/* Animação de pulse para loading */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================ */
+/* MICRO-INTERAÇÕES */
+/* ============================================ */
+
+/* Hover em cards */
+.card-hover {
+  @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Hover em botões */
+.button-hover {
+  @apply transition-all duration-150 hover:scale-105 active:scale-95;
+}
+
+/* Focus visível para acessibilidade */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
+}
+
+/* ============================================ */
+/* RESPONSIVIDADE */
+/* ============================================ */
+
+/* Esconder scrollbar mas manter funcionalidade */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ============================================ */
+/* TOAST CUSTOMIZATION (SONNER) - MODERN UI */
+/* ============================================ */
+
+/* Z-INDEX GLOBAL: Garante que toasts fiquem acima de tudo */
+[data-sonner-toaster] {
+  z-index: 99999 !important;
+  pointer-events: none !important; /* Permite clicar através do espaço vazio */
+}
+
+/* Toasts individuais devem capturar cliques */
+[data-sonner-toast] {
+  pointer-events: auto !important; /* Permite interação com o toast */
+  isolation: isolate; /* Cria novo contexto de empilhamento */
+}
+
+/* Captura todos os eventos do toast para evitar propagação */
+[data-sonner-toast] * {
+  pointer-events: auto !important;
+}
+
+/* Container do toast com layout flexível e design moderno */
+[data-sonner-toast] {
+  @apply flex items-start gap-3 pr-3 relative;
+  min-height: 48px;
+  border-radius: 12px !important;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ============================================ */
+/* TOAST COLORS - MODERN PALETTE */
+/* ============================================ */
+
+/* Toast de Sucesso - Verde Esmeralda Elegante */
+[data-sonner-toast][data-type='success'] {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
+  border: 1px solid #10b981 !important;
+  color: #ecfdf5 !important;
+}
+
+[data-sonner-toast][data-type='success'] [data-icon] {
+  color: #34d399 !important;
+}
+
+[data-sonner-toast][data-type='success'] [data-title] {
+  color: #ecfdf5 !important;
+  font-weight: 600 !important;
+}
+
+[data-sonner-toast][data-type='success'] [data-description] {
+  color: #d1fae5 !important;
+  opacity: 0.9;
+}
+
+/* Toast de Erro - Vermelho Elegante */
+[data-sonner-toast][data-type='error'] {
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%) !important;
+  border: 1px solid #ef4444 !important;
+  color: #fef2f2 !important;
+}
+
+[data-sonner-toast][data-type='error'] [data-icon] {
+  color: #fca5a5 !important;
+}
+
+[data-sonner-toast][data-type='error'] [data-title] {
+  color: #fef2f2 !important;
+  font-weight: 600 !important;
+}
+
+[data-sonner-toast][data-type='error'] [data-description] {
+  color: #fee2e2 !important;
+  opacity: 0.9;
+}
+
+/* Toast de Warning - Âmbar Elegante */
+[data-sonner-toast][data-type='warning'] {
+  background: linear-gradient(135deg, #78350f 0%, #92400e 100%) !important;
+  border: 1px solid #f59e0b !important;
+  color: #fef3c7 !important;
+}
+
+[data-sonner-toast][data-type='warning'] [data-icon] {
+  color: #fbbf24 !important;
+}
+
+[data-sonner-toast][data-type='warning'] [data-title] {
+  color: #fef3c7 !important;
+  font-weight: 600 !important;
+}
+
+[data-sonner-toast][data-type='warning'] [data-description] {
+  color: #fde68a !important;
+  opacity: 0.9;
+}
+
+/* Toast de Info - Azul Elegante */
+[data-sonner-toast][data-type='info'] {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
+  border: 1px solid #3b82f6 !important;
+  color: #dbeafe !important;
+}
+
+[data-sonner-toast][data-type='info'] [data-icon] {
+  color: #60a5fa !important;
+}
+
+[data-sonner-toast][data-type='info'] [data-title] {
+  color: #dbeafe !important;
+  font-weight: 600 !important;
+}
+
+[data-sonner-toast][data-type='info'] [data-description] {
+  color: #bfdbfe !important;
+  opacity: 0.9;
+}
+
+/* Toast de Loading - Cinza Elegante */
+[data-sonner-toast][data-type='loading'] {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%) !important;
+  border: 1px solid #6b7280 !important;
+  color: #f3f4f6 !important;
+}
+
+[data-sonner-toast][data-type='loading'] [data-icon] {
+  color: #9ca3af !important;
+}
+
+[data-sonner-toast][data-type='loading'] [data-title] {
+  color: #f3f4f6 !important;
+  font-weight: 600 !important;
+}
+
+[data-sonner-toast][data-type='loading'] [data-description] {
+  color: #e5e7eb !important;
+  opacity: 0.9;
+}
+
+/* Conteúdo do toast (ícone + texto) */
+[data-sonner-toast] > div:first-child {
+  @apply flex-1 flex items-start gap-3;
+}
+
+/* ============================================ */
+/* BOTÃO DE FECHAR - DESIGN MODERNO */
+/* ============================================ */
+
+/* Estilização do botão de fechar do Toast - CANTO DIREITO */
+[data-sonner-toast] [data-close-button] {
+  @apply flex-shrink-0 transition-all duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-white/30;
+  @apply rounded-lg p-1.5 ml-auto;
+  @apply self-start;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  cursor: pointer !important;
+  position: relative !important;
+  top: 0 !important;
+  right: 0 !important;
+  margin-top: 2px;
+  pointer-events: auto !important;
+  z-index: 1 !important;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0.7;
+  backdrop-filter: blur(4px);
+}
+
+/* Hover no botão de fechar */
+[data-sonner-toast] [data-close-button]:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.05);
+}
+
+/* Active state */
+[data-sonner-toast] [data-close-button]:active {
+  transform: scale(0.95);
+}
+
+/* Ícone do botão de fechar */
+[data-sonner-toast] [data-close-button] svg {
+  @apply w-4 h-4;
+  stroke-width: 2.5;
+  color: rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.2s;
+}
+
+[data-sonner-toast] [data-close-button]:hover svg {
+  color: rgba(255, 255, 255, 1) !important;
+  stroke-width: 3;
+}
+
+/* Cores específicas do botão por tipo de toast */
+[data-sonner-toast][data-type='success'] [data-close-button] {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-sonner-toast][data-type='success'] [data-close-button]:hover {
+  background: rgba(16, 185, 129, 0.25) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+}
+
+[data-sonner-toast][data-type='error'] [data-close-button] {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+[data-sonner-toast][data-type='error'] [data-close-button]:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+[data-sonner-toast][data-type='warning'] [data-close-button] {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-sonner-toast][data-type='warning'] [data-close-button]:hover {
+  background: rgba(245, 158, 11, 0.25) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-sonner-toast][data-type='info'] [data-close-button] {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-sonner-toast][data-type='info'] [data-close-button]:hover {
+  background: rgba(59, 130, 246, 0.25) !important;
+  border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+/* ============================================ */
+/* ANIMAÇÕES E EFEITOS */
+/* ============================================ */
+
+/* Hover no toast completo */
+[data-sonner-toast]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.4), 0 10px 15px -8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-sonner-toast]:hover [data-close-button] {
+  opacity: 1;
+}
+
+/* Animação de entrada */
+[data-sonner-toast][data-mounted] {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Animação de saída */
+[data-sonner-toast][data-removed="true"] {
+  animation: slideOutRight 0.2s cubic-bezier(0.4, 0, 1, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Brilho sutil no ícone de sucesso */
+[data-sonner-toast][data-type='success'] [data-icon] {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Toast loading com animação suave */
+[data-sonner-toast][data-type="loading"] [data-icon] {
+  @apply animate-spin;
+}
+
+/* ============================================ */
+/* Z-INDEX HIERARCHY (SOBREPOSIÇÃO) */
+/* ============================================ */
+
+/* Garantir hierarquia correta de z-index */
+[data-radix-dialog-overlay],
+[data-radix-alert-dialog-overlay] {
+  z-index: 50 !important; /* Overlay de modais */
+}
+
+[data-radix-dialog-content],
+[data-radix-alert-dialog-content] {
+  z-index: 51 !important; /* Conteúdo de modais */
+}
+
+[data-radix-dropdown-menu-content] {
+  z-index: 52 !important; /* Dropdown menus */
+}
+
+[data-sonner-toaster] {
+  z-index: 99999 !important; /* Toasts sempre no topo */
+}
+
+/* Garantir que toasts individuais herdem o z-index correto */
+[data-sonner-toast] {
+  z-index: inherit !important;
+}
+
